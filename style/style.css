@@ -1,0 +1,24 @@
+body
+{
+    background-color:#e3f2fd;
+}
+.a
+{
+    display:inline;
+}
+input
+{
+    background-color:#e3f2fd !important ;
+}
+.b
+{
+    width:200px;
+}
+.z
+{
+    position: absolute;
+    top:50vh;
+    left: 25vw;
+    margin-left: -50px;
+    text-align:center;
+}
