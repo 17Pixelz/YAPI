@@ -15,11 +15,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/Projet/index.php">Ajouter mot-cle <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="/Projet/content/videos.php">Videos</a>
-            <a class="nav-item nav-link" href="/Projet/content/channels.php">Channels</a>
-            <a class="nav-item nav-link active" href="/Projet/content/comments.php">Comments</a>
-            <a class="nav-item nav-link" href="/Projet/content/requetes.php">Requetes</a>
+            <a class="nav-item nav-link" href="/project/index.php">Ajouter mot-cle <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/project/content/videos.php">Videos</a>
+            <a class="nav-item nav-link" href="/project/content/channels.php">Channels</a>
+            <a class="nav-item nav-link active" href="/project/content/comments.php">Comments</a>
+            <a class="nav-item nav-link" href="/project/content/requetes.php">Requetes</a>
             </div>
         </div>
     </nav>

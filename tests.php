@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@
 </form>
     
 </body>
-</html>
+</html>-->
 <?php
 /*
 include './api/db_connect.php';
@@ -42,7 +42,7 @@ echo $v->id;*/
 //echo date('Y-m-d H:m:s');
 
 
-echo $_GET['a'];
+//echo $_GET['a'];
 
 
 /*
@@ -58,4 +58,9 @@ echo $_GET['a'];
 
 //SELECT c.v_id,c.v_titre FROM (SELECT a.v_id,a.v_titre,MAX(a.v_j) FROM videos a, contiennent b WHERE a.v_id=b.v_id GROUP BY b.mc_id) c
 
+
+$a = fopen("./construction/CREATE.sql","r");
+$sql= fread($a,filesize("./construction/CREATE.sql"));
+$sql=str_replace('"','\"',$sql);
+echo $sql;
 ?>
