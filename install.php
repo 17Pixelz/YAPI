@@ -39,7 +39,7 @@ if (\$conn->connect_error) {
    echo \"error lors la connection\";
 }
 ?>";
-                $a=fopen("dbb.php","w");
+                $a=fopen("./api/db_connect.php","w");
                 fwrite($a,$db);
                 fclose($a);
                 unlink(__FILE__);
