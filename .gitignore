@@ -3,4 +3,6 @@
 
 ./a.php
 
-./test.php
+./tests.php
+
+./install.php
