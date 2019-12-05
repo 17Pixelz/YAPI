@@ -1,0 +1,6 @@
+# ignoring the db_connect file because it will be created in the hosting server
+./api/db_connect.php
+
+./a.php
+
+./test.php
