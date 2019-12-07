@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="../style/style.css">
     <title>Videos</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      function getData(empid, divid){
+                $.ajax({
+                    url: '../helpers/v.php?q='+empid, 
+                    success: function(html) {
+                        var ajaxDisplay = document.getElementById(divid);
+                        ajaxDisplay.innerHTML = html;
+                    }
+                });
+            }
+    </script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -23,50 +35,33 @@
             </div>
         </div>
     </nav>
-    <table  class="table table-dark table-hover table-striped">
-    <thead>
-      <tr>
-        <th>video id</th>
-        <th>video name</th>
-        <th>channel id</th>
-      </tr>
-    </thead>
-    <tbody>
-    <?php 
-        require_once '../api/db_connect.php';
-
-        $sql = "SELECT v_id, v_titre,ch_id FROM videos";
-        $result = $conn->query($sql);
-        if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-                echo "<tr>";
-                //href=\"https://www.youtube.com/watch?v=". $row['v_id'] ."\" target=\"_blank\"
-                    echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['v_id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\">" . $row['v_id']  . "</a></span></td>";
-                    echo "<td>" . $row['v_titre'] ."</td>";
-                    echo "<td>" . $row['ch_id']. "</td>";
-                echo "</tr>";
-                $html="<div class=\"modal fade\" id=\"myModal".$row['v_id']."\">
-                <div class=\"modal-dialog\">
-                  <div class=\"modal-content\">
-                  
-                    <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['v_id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
-                    
+    <div class="selecto">
+              <?php
+                require '../api/db_connect.php';
+                $select = "SELECT * FROM motscles";
+                $result = $conn->query($select);
+                if ($result->num_rows > 0){
+                  $option = '<option value="">Select Query</option>';
+                  while($row = $result->fetch_object()){
+                    $option .= '<option value="'.$row->mc_id.'">'.$row->mc.' a '.$row->rech_d.'</option>';
+                }
+              ?>  
+              <form method="get">
+                  <select name="empid" id="empid"  class="form-control" onchange="getData(this.value, 'displaydata')">
+                    <?php
+                      echo $option;
+                    ?> 
+                  </select>
+                  <div id="displaydata">
                   </div>
-                </div>
-              </div>";
-              echo $html;
-                        
-            }
-        } else {
-            echo "<tr>";
-                    echo "<td>Aucun</td>";
-                    echo "<td>Resultat</td>";
-            echo "</tr>";
-        }
-    ?>
-    </tbody>
-    </table>
+               </form>
+              <?php
+                  }else{
+                    echo "<h1 style='text-align:center;margin-top:250px;font-size:60px'> There's no videos</h1>";
+                  }
+                ?>
+    </div>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>

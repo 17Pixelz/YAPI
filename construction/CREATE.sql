@@ -1,7 +1,7 @@
 CREATE TABLE motscles(
         mc_id  Int NOT NULL AUTO_INCREMENT,
         mc     Varchar (255) NOT NULL ,
-        rech_d Date NOT NULL ,
+        rech_d Datetime NOT NULL ,
         dep_d  Date ,
         fin_d  Date
 	,CONSTRAINT motscles_PK PRIMARY KEY (mc_id)

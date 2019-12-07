@@ -7,9 +7,29 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="../style/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <title>Requets</title>
+    <style>
+        .table
+        {
+            margin:0;
+        }
+        .modal-body
+        {
+            padding:0;
+        }
+    </style>
+    <script>
+      function getData(empid, divid){
+                $.ajax({
+                    url: '../helpers/c.php?q='+empid, 
+                    success: function(html) {
+                        var ajaxDisplay = document.getElementById(divid);
+                        ajaxDisplay.innerHTML = html;
+                    }
+                });
+            }
+    </script>
 </head>
 <body>
     <?php require_once "../api/db_connect.php" ?>
@@ -23,7 +43,7 @@
             <a class="nav-item nav-link" href="/project/content/videos.php">Videos</a>
             <a class="nav-item nav-link" href="/project/content/channels.php">Channels</a>
             <a class="nav-item nav-link" href="/project/content/comments.php">Comments</a>
-            <a class="nav-item nav-link active" href="/Projet/content/requetes.php">Requetes</a>
+            <a class="nav-item nav-link active" href="/Project/content/requetes.php">Requetes</a>
             </div>
         </div>
     </nav>
@@ -42,36 +62,48 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Requete 1:  </h4>
+                        <h4 class="modal-title">Requete 1:  Quels sont le ID et le Titre de la vidéo qui a obtenu le maximum de « Like », pour chacune des « Queries » présentes dans la base de données.</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                    <table  class="table table-dark table-hover table-striped">
+                    <?php
+                            $sql = "select m.mc mc,c1.v_id id,v1.v_titre titre
+                                    from motscles m,videos v1,contiennent c1  
+                                    where 
+                                        c1.mc_id=m.mc_id  and 
+                                        v1.v_id=c1.v_id and 
+                                        v_j = ( select max(v_j) 
+                                                from videos v2,contiennent c2 
+                                                where c2.mc_id=m.mc_id and 
+                                                v2.v_id=c2.v_id 
+                                               )";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {?>
+                    
+                    
+                    <br><table  class="table table-dark table-hover table-striped">
                     <thead>
                     <tr>
                         <th>video id</th>
                         <th>video name</th>
-                        <th>channel id</th>
+                        <th>mot cle</th>
                     </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $sql = "SELECT v_id, v_titre,ch_id FROM videos";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
                                 // output data of each row
                                 while($row = $result->fetch_assoc()) {
                                     echo "<tr>";
                                     //href=\"https://www.youtube.com/watch?v=". $row['v_id'] ."\" target=\"_blank\"
-                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['v_id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\" style=\"cursor:pointer;text-decoration:underline;color:grey\">" . $row['v_id']  . "</a></span></td>";
-                                        echo "<td>" . $row['v_titre'] ."</td>";
-                                        echo "<td>" . $row['ch_id']. "</td>";
+                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\" style=\"cursor:pointer;text-decoration:underline;color:grey\">" . $row['id']  . "</a></span></td>";
+                                        echo "<td>" . $row['titre'] ."</td>";
+                                        echo "<td>" . $row['mc']. "</td>";
                                     echo "</tr>";
-                                    $html="<div class=\"modal fade\" id=\"myModal".$row['v_id']."\">
+                                    $html="<div class=\"modal fade\" id=\"myModal".$row['id']."\">
                                     <div class=\"modal-dialog\">
                                       <div class=\"modal-content\">
                                       
-                                        <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['v_id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
+                                        <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
                                         
                                       </div>
                                     </div>
@@ -79,15 +111,15 @@
                                   echo $html;
                                             
                                 }
-                            } else {
-                                echo "<tr>";
-                                        echo "<td>Aucun</td>";
-                                        echo "<td>Resultat</td>";
-                                echo "</tr>";
-                            }
+                            
                         ?>
                         </tbody>
                         </table>
+                        <?php
+                            } else {
+                                echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
+                            }
+                        ?>
                     </div>    
                 </div>
             </div>
@@ -96,38 +128,61 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Requete 2:  </h4>
+                        <h4 class="modal-title">Requete 2:  Quels sont le ID et le Titre de la vidéo qui a obtenu le maximum de « DisLike » au maximum, pour chacune des Queries présente dans la base de données.</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                    <table  class="table table-dark table-hover table-striped">
+                    <?php
+                        $sql = "select m.mc mc ,c1.v_id id,v1.v_titre titre 
+                                from motscles m,videos v1,contiennent c1  
+                                where   c1.mc_id=m.mc_id  and 
+                                        v1.v_id=c1.v_id and 
+                                        v_jnp = (   select max(v_jnp) 
+                                                    from videos v2,contiennent c2 
+                                                    where  c2.mc_id=m.mc_id and 
+                                                    v2.v_id=c2.v_id
+                                                )";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                    ?>
+                    <br><table  class="table table-dark table-hover table-striped">
                     <thead>
                     <tr>
-                        <th>channel id</th>
-                        <th>channel name</th>
+                        <th>video id</th>
+                        <th>video name</th>
+                        <th>mot cle</th>
                     </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $sql = "SELECT ch_id, ch_name FROM chaines";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
-                                // output data of each row
-                                while($row = $result->fetch_assoc()) { // foreach ($result->fetch_assoc as $row)
-                                    echo "<tr>";
-                                        echo "<td><a href=\"https://www.youtube.com/channel/".$row['ch_id']."\" target=\"_blank\">" . $row['ch_id']  . "</a></td>";
-                                        echo "<td>" . $row['ch_name'] ."</td>";
-                                    echo "</tr>";
-                                }
-                            } else {
-                                echo "<tr>";
-                                        echo "<td>Aucun</td>";
-                                        echo "<td>Resultat</td>";
-                                echo "</tr>";
-                            }
+                                    // output data of each row
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "<tr>";
+                                        //href=\"https://www.youtube.com/watch?v=". $row['v_id'] ."\" target=\"_blank\"
+                                            echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\" style=\"cursor:pointer;text-decoration:underline;color:grey\">" . $row['id']  . "</a></span></td>";
+                                            echo "<td>" . $row['titre'] ."</td>";
+                                            echo "<td>" . $row['mc']. "</td>";
+                                        echo "</tr>";
+                                        $html="<div class=\"modal fade\" id=\"myModal".$row['id']."\">
+                                        <div class=\"modal-dialog\">
+                                          <div class=\"modal-content\">
+                                          
+                                            <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
+                                            
+                                          </div>
+                                        </div>
+                                      </div>";
+                                      echo $html;
+                                                
+                                    }
                         ?>
                         </tbody>
                         </table>
+                        <?php
+                            }else{
+                                echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
+                            }
+                        ?>
                     </div>    
                 </div>
             </div>
@@ -136,52 +191,49 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Requete 3:  </h4>
+                        <h4 class="modal-title">Requete 3:  Parmi les vidéos présentes dans la base de données, combien de vidéos ont été publiées par année et par « Query ».</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                    <table  class="table table-dark table-hover table-striped">
+                    <?php
+                        $sql = "select m.mc mc,YEAR(v.pub_date) pub ,count(c.v_id) nbr 
+                        from motscles m, videos v, contiennent c 
+                        where   m.mc_id=c.mc_id and 
+                                c.v_id=v.v_id 
+                        group by m.mc,YEAR(v.pub_date);";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                    ?>
+                    <br><table  class="table table-dark table-hover table-striped">
                     <thead>
                     <tr>
-                        <th>video id</th>
-                        <th>video name</th>
-                        <th>channel id</th>
+                        <th>mot cle</th>
+                        <th>annee</th>
+                        <th>nombre de video</th>
                     </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $sql = "SELECT v_id, v_titre,ch_id FROM videos";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
+                            
                                 // output data of each row
                                 while($row = $result->fetch_assoc()) {
                                     echo "<tr>";
                                     //href=\"https://www.youtube.com/watch?v=". $row['v_id'] ."\" target=\"_blank\"
-                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['v_id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\">" . $row['v_id']  . "</a></span></td>";
-                                        echo "<td>" . $row['v_titre'] ."</td>";
-                                        echo "<td>" . $row['ch_id']. "</td>";
+                                        echo "<td>" . $row['mc'] ."</td>";
+                                        echo "<td>" . $row['pub'] ."</td>";
+                                        echo "<td>" . $row['nbr']. "</td>";
                                     echo "</tr>";
-                                    $html="<div class=\"modal fade\" id=\"myModal".$row['v_id']."\">
-                                    <div class=\"modal-dialog\">
-                                      <div class=\"modal-content\">
-                                      
-                                        <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['v_id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
-                                        
-                                      </div>
-                                    </div>
-                                  </div>";
-                                  echo $html;
-                                            
                                 }
-                            } else {
-                                echo "<tr>";
-                                        echo "<td>Aucun</td>";
-                                        echo "<td>Resultat</td>";
-                                echo "</tr>";
-                            }
+                            
                         ?>
                         </tbody>
                         </table>
+
+                        <?php
+                            }else{
+                                echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
+                            }
+                        ?>
                     </div>    
                 </div>
             </div>
@@ -190,36 +242,44 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Requete 4:  </h4>
+                        <h4 class="modal-title">Requete 4:  Pour chacune des vidéos présentes dans la base de données, quel est le nombre total des commentaires (y compris les réponses aux commentaires), et le nombre total des utilisateurs ayant rédigé ou répondu un commentaire.</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                    <table  class="table table-dark table-hover table-striped">
+                    <?php
+                        $sql = "select v.v_id id,v.v_titre titre,n_comm n,count(distinct(com.ch_id)) utilisateur 
+                        from videos v,commentaires com 
+                        where v.v_id=com.v_id 
+                        group by v_titre";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                    ?>
+                    <br><table  class="table table-dark table-hover table-striped">
                     <thead>
                     <tr>
                         <th>video id</th>
                         <th>video name</th>
-                        <th>channel id</th>
+                        <th>nombre commentair</th>
+                        <th>nombre utilisateurs commente</th>
                     </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $sql = "SELECT v_id, v_titre,ch_id FROM videos";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
+                            
                                 // output data of each row
                                 while($row = $result->fetch_assoc()) {
                                     echo "<tr>";
                                     //href=\"https://www.youtube.com/watch?v=". $row['v_id'] ."\" target=\"_blank\"
-                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['v_id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\">" . $row['v_id']  . "</a></span></td>";
-                                        echo "<td>" . $row['v_titre'] ."</td>";
-                                        echo "<td>" . $row['ch_id']. "</td>";
+                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\">" . $row['id']  . "</a></span></td>";
+                                        echo "<td>" . $row['titre'] ."</td>";
+                                        echo "<td>" . $row['n']. "</td>";
+                                        echo "<td>" . $row['utilisateur']. "</td>";
                                     echo "</tr>";
-                                    $html="<div class=\"modal fade\" id=\"myModal".$row['v_id']."\">
+                                    $html="<div class=\"modal fade\" id=\"myModal".$row['id']."\">
                                     <div class=\"modal-dialog\">
                                       <div class=\"modal-content\">
                                       
-                                        <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['v_id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
+                                        <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
                                         
                                       </div>
                                     </div>
@@ -227,15 +287,15 @@
                                   echo $html;
                                             
                                 }
-                            } else {
-                                echo "<tr>";
-                                        echo "<td>Aucun</td>";
-                                        echo "<td>Resultat</td>";
-                                echo "</tr>";
-                            }
                         ?>
                         </tbody>
                         </table>
+
+                        <?php
+                            }else{
+                                echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
+                            }
+                        ?>
                     </div>    
                 </div>
             </div>
@@ -244,52 +304,35 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Requete 5:  </h4>
+                        <h4 class="modal-title">Requete 5:  Pour une « Query » donnée, quels sont le ID et le Titre de la vidéo qui a été « Liké » au maximum.</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                    <table  class="table table-dark table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th>video id</th>
-                        <th>video name</th>
-                        <th>channel id</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                    <div class="selecto">
                         <?php
-                            $sql = "SELECT v_id, v_titre,ch_id FROM videos";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
-                                // output data of each row
-                                while($row = $result->fetch_assoc()) {
-                                    echo "<tr>";
-                                    //href=\"https://www.youtube.com/watch?v=". $row['v_id'] ."\" target=\"_blank\"
-                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['v_id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\">" . $row['v_id']  . "</a></span></td>";
-                                        echo "<td>" . $row['v_titre'] ."</td>";
-                                        echo "<td>" . $row['ch_id']. "</td>";
-                                    echo "</tr>";
-                                    $html="<div class=\"modal fade\" id=\"myModal".$row['v_id']."\">
-                                    <div class=\"modal-dialog\">
-                                      <div class=\"modal-content\">
-                                      
-                                        <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['v_id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
-                                        
-                                      </div>
-                                    </div>
-                                  </div>";
-                                  echo $html;
-                                            
-                                }
-                            } else {
-                                echo "<tr>";
-                                        echo "<td>Aucun</td>";
-                                        echo "<td>Resultat</td>";
-                                echo "</tr>";
+                            $select = "SELECT * FROM motscles";
+                            $result = $conn->query($select);
+                            if ($result->num_rows > 0){
+                            $option = '<option value="">Select Query</option>';
+                            while($row = $result->fetch_object()){
+                                $option .= '<option value="'.$row->mc_id.'">'.$row->mc.' a '.$row->rech_d.'</option>';
+                            }
+                        ?>  
+                        <form method="get">
+                            <select name="empid" id="empid"  class="form-control" onchange="getData(this.value, 'displaydata')">
+                                <?php
+                                echo $option;
+                                ?> 
+                            </select>
+                            <div id="displaydata">
+                            </div>
+                        </form>
+                        <?php
+                            }else{
+                                echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
                             }
                         ?>
-                        </tbody>
-                        </table>
+                            </div>
                     </div>    
                 </div>
             </div>
@@ -298,36 +341,50 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Requete 6:  </h4>
+                        <h4 class="modal-title">Requete 6:  Quels sont le ID et le Titre de la vidéo qui a reçu le maximum de commentaires, pour chacune des « Queries » présentes dans la base de données.</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                    <table  class="table table-dark table-hover table-striped">
+
+                    <?php
+                        $sql = "select m.mc mc ,c1.v_id id ,v1.v_titre titre , n_comm n
+                        from motscles m,videos v1,contiennent c1  
+                        where c1.mc_id=m.mc_id  and 
+                        v1.v_id=c1.v_id and 
+                        n_comm= (   select max(n_comm) 
+                                    from videos v2,contiennent c2 
+                                    where  c2.mc_id=m.mc_id and 
+                                    v2.v_id=c2.v_id 
+                                )";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                    ?>
+                    <br><table  class="table table-dark table-hover table-striped">
                     <thead>
                     <tr>
+                        <th>mot cle</th>
                         <th>video id</th>
                         <th>video name</th>
-                        <th>channel id</th>
+                        <th>nombre de comments</th>
                     </tr>
                     </thead>
                     <tbody>
                         <?php
-                            $sql = "SELECT v_id, v_titre,ch_id FROM videos";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
+                            
                                 // output data of each row
                                 while($row = $result->fetch_assoc()) {
                                     echo "<tr>";
                                     //href=\"https://www.youtube.com/watch?v=". $row['v_id'] ."\" target=\"_blank\"
-                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['v_id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\">" . $row['v_id']  . "</a></span></td>";
-                                        echo "<td>" . $row['v_titre'] ."</td>";
-                                        echo "<td>" . $row['ch_id']. "</td>";
+                                        echo "<td>" . $row['mc']. "</td>";    
+                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\">" . $row['id']  . "</a></span></td>";
+                                        echo "<td>" . $row['titre'] ."</td>";
+                                        echo "<td>" . $row['n'] ."</td>";
                                     echo "</tr>";
-                                    $html="<div class=\"modal fade\" id=\"myModal".$row['v_id']."\">
+                                    $html="<div class=\"modal fade\" id=\"myModal".$row['id']."\">
                                     <div class=\"modal-dialog\">
                                       <div class=\"modal-content\">
                                       
-                                        <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['v_id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
+                                        <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
                                         
                                       </div>
                                     </div>
@@ -335,15 +392,14 @@
                                   echo $html;
                                             
                                 }
-                            } else {
-                                echo "<tr>";
-                                        echo "<td>Aucun</td>";
-                                        echo "<td>Resultat</td>";
-                                echo "</tr>";
-                            }
                         ?>
                         </tbody>
                         </table>
+                        <?php
+                            }else{
+                                echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
+                            }
+                        ?>
                     </div>    
                 </div>
             </div>
@@ -352,11 +408,16 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Requete 7:  </h4>
+                        <h4 class="modal-title">Requete 7:  Pour une requête donnée, afficher l’utilisateur ayant rédigé le commentaire le plus populaire concernant la vidéo la plus « Likée »</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                    <table  class="table table-dark table-hover table-striped">
+                    <?php
+                        $sql = "SELECT v_id, v_titre,ch_id FROM videos";
+                        $result = $conn->query($sql);
+                        if ($result->num_rows > 0) {
+                    ?>
+                    <br><table  class="table table-dark table-hover table-striped">
                     <thead>
                     <tr>
                         <th>video id</th>
@@ -366,9 +427,7 @@
                     </thead>
                     <tbody>
                         <?php
-                            $sql = "SELECT v_id, v_titre,ch_id FROM videos";
-                            $result = $conn->query($sql);
-                            if ($result->num_rows > 0) {
+                            
                                 // output data of each row
                                 while($row = $result->fetch_assoc()) {
                                     echo "<tr>";
@@ -389,15 +448,14 @@
                                   echo $html;
                                             
                                 }
-                            } else {
-                                echo "<tr>";
-                                        echo "<td>Aucun</td>";
-                                        echo "<td>Resultat</td>";
-                                echo "</tr>";
-                            }
                         ?>
                         </tbody>
                         </table>
+                        <?php
+                            }else{
+                                echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
+                            }
+                        ?>
                     </div>    
                 </div>
             </div>

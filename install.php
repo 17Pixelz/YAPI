@@ -21,19 +21,15 @@
                 $username = $_POST['username'];
                 $password = $_POST['password'];
                 $dbname =  $_POST['dbname'];
-
-
                 $conn = new mysqli($servername, $username, $password);
                 if ($conn->connect_error) {
                 echo "<br><br><h2 style=\"color:red\">Error lors la connection.</h2><br><h5>Rentrez les donnes svp</h5>";
                 }else{
                 $db="<?php
-\$servername = \"localhost\";
+\$servername = \"".$_SERVER['SERVER_NAME']."\";
 \$username = \"".$_POST['username']."\";
 \$password = \"".$_POST['password']."\";
 \$dbname = \"".$_POST['dbname']."\";
-
-
 \$conn = new mysqli(\$servername, \$username, \$password, \$dbname);
 if (\$conn->connect_error) {
    echo \"error lors la connection\";
@@ -56,11 +52,7 @@ if (\$conn->connect_error) {
         }
     }
         
-
         
-
-
-
     ?> 
       
     <form method="POST"> 
