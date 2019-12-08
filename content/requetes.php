@@ -20,9 +20,9 @@
         }
     </style>
     <script>
-      function getData(empid, divid){
+      function getData(c, q, divid){
                 $.ajax({
-                    url: '../helpers/c.php?q='+empid, 
+                    url: 'data.php?c='+c+'&q='+q, 
                     success: function(html) {
                         var ajaxDisplay = document.getElementById(divid);
                         ajaxDisplay.innerHTML = html;
@@ -47,7 +47,11 @@
             </div>
         </div>
     </nav>
-
+    <?php
+        $res=$conn->query("SELECT * FROM videos");
+        if ($res->num_rows > 0)
+            {
+    ?>
     <div class="data">
         <div class="text-center" style="margin-top:250px">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#r1" style="margin:20px">Requete 1</button>
@@ -270,7 +274,7 @@
                                 while($row = $result->fetch_assoc()) {
                                     echo "<tr>";
                                     //href=\"https://www.youtube.com/watch?v=". $row['v_id'] ."\" target=\"_blank\"
-                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\">" . $row['id']  . "</a></span></td>";
+                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\" style=\"cursor:pointer;text-decoration:underline;color:grey\">" . $row['id']  . "</a></span></td>";
                                         echo "<td>" . $row['titre'] ."</td>";
                                         echo "<td>" . $row['n']. "</td>";
                                         echo "<td>" . $row['utilisateur']. "</td>";
@@ -319,7 +323,7 @@
                             }
                         ?>  
                         <form method="get">
-                            <select name="empid" id="empid"  class="form-control" onchange="getData(this.value, 'displaydata')">
+                            <select name="empid" id="empid"  class="form-control" onchange="getData('r5' ,this.value, 'displaydata')">
                                 <?php
                                 echo $option;
                                 ?> 
@@ -413,44 +417,23 @@
                     </div>
                     <div class="modal-body">
                     <?php
-                        $sql = "SELECT v_id, v_titre,ch_id FROM videos";
-                        $result = $conn->query($sql);
-                        if ($result->num_rows > 0) {
-                    ?>
-                    <br><table  class="table table-dark table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th>video id</th>
-                        <th>video name</th>
-                        <th>channel id</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            
-                                // output data of each row
-                                while($row = $result->fetch_assoc()) {
-                                    echo "<tr>";
-                                    //href=\"https://www.youtube.com/watch?v=". $row['v_id'] ."\" target=\"_blank\"
-                                        echo "<td><span  data-toggle=\"modal\" data-target=\"#myModal".$row['v_id']."\" ><a data-toggle=\"tooltip\" title=\"Regarder\">" . $row['v_id']  . "</a></span></td>";
-                                        echo "<td>" . $row['v_titre'] ."</td>";
-                                        echo "<td>" . $row['ch_id']. "</td>";
-                                    echo "</tr>";
-                                    $html="<div class=\"modal fade\" id=\"myModal".$row['v_id']."\">
-                                    <div class=\"modal-dialog\">
-                                      <div class=\"modal-content\">
-                                      
-                                        <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/".$row['v_id']."\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>
-                                        
-                                      </div>
-                                    </div>
-                                  </div>";
-                                  echo $html;
-                                            
-                                }
-                        ?>
-                        </tbody>
-                        </table>
+                            $select = "SELECT * FROM motscles";
+                            $result = $conn->query($select);
+                            if ($result->num_rows > 0){
+                            $option = '<option value="">Select Query</option>';
+                            while($row = $result->fetch_object()){
+                                $option .= '<option value="'.$row->mc_id.'">'.$row->mc.' a '.$row->rech_d.'</option>';
+                            }
+                        ?>  
+                        <form method="get">
+                            <select name="empid" id="empid"  class="form-control" onchange="getData('r7' ,this.value, 'displaydata')">
+                                <?php
+                                echo $option;
+                                ?> 
+                            </select>
+                            <div id="displaydata">
+                            </div>
+                        </form>
                         <?php
                             }else{
                                 echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
@@ -461,6 +444,12 @@
             </div>
         </div>
     </div>
-
+    <?php
+            }
+            else
+            {
+                echo "<h1 style='text-align:center;margin-top:250px;font-size:60px'>La base de donnees est vide</h1><br><h2 style='text-align:center;font-size:30px'>ajouter les donnes par ajouter un mot cle</h2>";
+            }
+    ?>
 </body>
 </html>

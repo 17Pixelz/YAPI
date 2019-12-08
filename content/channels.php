@@ -23,32 +23,33 @@
             </div>
         </div>
     </nav>
-    <table  class="table table-dark table-hover table-striped">
-    <thead>
-      <tr>
-        <th>channel id</th>
-        <th>channel name</th>
-      </tr>
-    </thead>
-    <tbody>
+    
     <?php 
         require_once '../api/db_connect.php';
 
         $sql = "SELECT ch_id, ch_name FROM chaines";
         $result = $conn->query($sql);
         if ($result->num_rows > 0) {
+        ?>
+        <table  class="table table-dark table-hover table-striped">
+            <thead>
+            <tr>
+                <th>channel id</th>
+                <th>channel name</th>
+            </tr>
+            </thead>
+            <tbody>
+        <?php
             // output data of each row
-            while($row = $result->fetch_assoc()) { // foreach ($result->fetch_assoc as $row)
+            while($row = $result->fetch_assoc()) {
                 echo "<tr>";
-                    echo "<td><a href=\"https://www.youtube.com/channel/".$row['ch_id']."\" target=\"_blank\">" . $row['ch_id']  . "</a></td>";
+                    echo "<td><a href=\"https://www.youtube.com/channel/".$row['ch_id']."\" target=\"_blank\" style=\"cursor:pointer;text-decoration:underline;color:grey\">" . $row['ch_id']  . "</a></td>";
                     echo "<td>" . $row['ch_name'] ."</td>";
                 echo "</tr>";
             }
         } else {
-            echo "<tr>";
-                    echo "<td>Aucun</td>";
-                    echo "<td>Resultat</td>";
-            echo "</tr>";
+            echo "<h1 style='text-align:center;margin-top:250px;font-size:60px'>La base de donnees est vide</h1><br><h2 style='text-align:center;font-size:30px'>ajouter les donnes par ajouter un mot cle</h2>";
+
         }
     ?>
     </tbody>

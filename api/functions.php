@@ -4,10 +4,21 @@ require 'db_connect.php';
 $dk="AIzaSyC_ytd6NqK4CJg2L_M7BqLWmlqSSOwHg-8";
 //$dk="AIzaSyABv2OXTwE_ptpYZ-x71o77XpN0SCfRgWQ";
 
+function get_json($url)
+{
+$curl = curl_init();
+curl_setopt($curl, CURLOPT_URL, $url);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($curl, CURLOPT_HEADER, false);
+$data = curl_exec($curl);
+curl_close($curl);
+return ($data);
+}
+
 function getDataForomJson($url)
 {
     $url = str_replace(" ", "%20", $url);
-    $a = file_get_contents($url);
+    $a = get_json($url);
     return (json_decode($a));
 }
 

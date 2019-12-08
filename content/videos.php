@@ -9,9 +9,9 @@
     <title>Videos</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
-      function getData(empid, divid){
+      function getData(c, q, divid){
                 $.ajax({
-                    url: '../helpers/v.php?q='+empid, 
+                    url: 'data.php?c='+c+'&q='+q, 
                     success: function(html) {
                         var ajaxDisplay = document.getElementById(divid);
                         ajaxDisplay.innerHTML = html;
@@ -34,34 +34,34 @@
             <a class="nav-item nav-link" href="/project/content/requetes.php">Requetes</a>
             </div>
         </div>
-    </nav>
     <div class="selecto">
               <?php
                 require '../api/db_connect.php';
                 $select = "SELECT * FROM motscles";
                 $result = $conn->query($select);
                 if ($result->num_rows > 0){
-                  $option = '<option value="">Select Query</option>';
+                  $option = '<option value="">choisir un query (date de recherche)</option>';
                   while($row = $result->fetch_object()){
-                    $option .= '<option value="'.$row->mc_id.'">'.$row->mc.' a '.$row->rech_d.'</option>';
+                    $option .= '<option value="'.$row->mc_id.'">'.$row->mc.'('.$row->rech_d.')</option>';
                 }
               ?>  
               <form method="get">
-                  <select name="empid" id="empid"  class="form-control" onchange="getData(this.value, 'displaydata')">
+                  <select name="empid" id="empid"  class="form-control" onchange="getData('v', this.value, 'displaydata')">
                     <?php
                       echo $option;
                     ?> 
                   </select>
-                  <div id="displaydata">
-                  </div>
+                  
                </form>
               <?php
                   }else{
-                    echo "<h1 style='text-align:center;margin-top:250px;font-size:60px'> There's no videos</h1>";
+                    echo "<h1 style='text-align:center;margin-top:250px;font-size:60px'>La base de donnees est vide</h1><br><h2 style='text-align:center;font-size:30px'>ajouter les donnes par ajouter un mot cle</h2>";
                   }
                 ?>
     </div>
-    
+    </nav>
+    <div id="displaydata">
+                  </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>

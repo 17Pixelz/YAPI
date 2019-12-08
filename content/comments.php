@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="../style/style.css">
     <title>Videos</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      function getData(c, q, divid){
+                $.ajax({
+                    url: 'data.php?c='+c+'&q='+q, 
+                    success: function(html) {
+                        var ajaxDisplay = document.getElementById(divid);
+                        ajaxDisplay.innerHTML = html;
+                    }
+                });
+            }
+    </script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -22,39 +34,34 @@
             <a class="nav-item nav-link" href="/project/content/requetes.php">Requetes</a>
             </div>
         </div>
+    
+    <div class="selecto">
+              <?php
+                require '../api/db_connect.php';
+                $select = "SELECT * FROM videos";
+                $result = $conn->query($select);
+                if ($result->num_rows > 0){
+                  $option = '<option value="">choisir un query (date de recherche)</option>';
+                  while($row = $result->fetch_object()){
+                    $option .= '<option value="'.$row->v_id.'">'.$row->v_titre.'('.$row->pub_date.')</option>';
+                }
+              ?>  
+              <form method="get">
+                  <select name="empid" id="empid"  class="form-control" onchange="getData('c', this.value, 'displaydata')">
+                    <?php
+                      echo $option;
+                    ?> 
+                  </select>
+                  
+               </form>
+              <?php
+                  }else{
+                    echo "<h1 style='text-align:center;margin-top:250px;font-size:60px'>La base de donnees est vide</h1><br><h2 style='text-align:center;font-size:30px'>ajouter les donnes par ajouter un mot cle</h2>";
+                  }
+                ?>
+    </div>
     </nav>
-    <table  class="table table-dark table-hover table-striped">
-    <thead>
-      <tr>
-        <th>comment id</th>
-        <th>comment</th>
-        <th>channel id</th>
-      </tr>
-    </thead>
-    <tbody>
-    <?php 
-        require_once '../api/db_connect.php';
-
-        $sql = "SELECT com_id, com, ch_id FROM commentaires";
-        $result = $conn->query($sql);
-        if ($result->num_rows > 0) {
-            // output data of each row
-            while($row = $result->fetch_assoc()) {
-                echo "<tr>";
-                    echo "<td>" . $row['com_id']  . "</td>";
-                    echo "<td>" . $row['com'] ."</td>";
-                    echo "<td><a href=\"https://www.youtube.com/channel/".$row['ch_id']."\" target=\"_blank\">" . $row['ch_id']  . "</a></td>";
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr>";
-                    echo "<td>Aucun</td>";
-                    echo "<td>Resultat</td>";
-            echo "</tr>";
-        }
-    ?>
-    </tbody>
-    </table>
+    <div id="displaydata"></div>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
