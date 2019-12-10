@@ -41,7 +41,7 @@ function    v($q)
                     $html .= "<td>" . $row['v_titre'] ."</td>";
                     $html .= "<td>" . $row['ch_id']. "</td>";
                     $html .= "</tr>";
-                $modal="<div class=\"modal fade\" id=\"myModal".$row['v_id']."\">
+                $modal="<div class=\"modal fade\" id=\"myModal".$row['v_id']."\" style=\"display:none\">
                 <div class=\"modal-dialog\">
                   <div class=\"modal-content\">
                   
@@ -172,13 +172,11 @@ function    c($q)
                     $html .= "<td>" . $row['cid']. "</td>";
                     $html .= "</tr>";
             }
+            $html .="</tbody></table>";
         } else {
-            echo "<h1 style='text-align:center;font-size:60px'>";
-                    echo "Aucun Resultat.";
-            echo "</h1>";
-        }
+            $html .= "<h1 style='text-align:center;margin-top:250px;font-size:60px'>La base de donnees est vide</h1><br><h2 style='text-align:center;font-size:30px'>ajouter les donnes par ajouter un mot cle</h2>";
 
-        $html .="</tbody></table>";
+        } 
         echo $html;
 }
 ?>

@@ -147,7 +147,7 @@ function get_videos($mc_id,$id)
 
 function get_comments($id)
 {
-    $searchComments = getDataForomJson("https://www.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=3&moderationStatus=published&order=relevance&videoId=". $id ."&key=".$GLOBALS['dk']);    
+    $searchComments = getDataForomJson("https://www.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=". 3 ."&moderationStatus=published&order=relevance&videoId=". $id ."&key=".$GLOBALS['dk']);    
     if (object_test($searchComments))
     {
         return 1;

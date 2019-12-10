@@ -34,7 +34,7 @@
             <a class="nav-item nav-link" href="/project/content/requetes.php">Requetes</a>
             </div>
         </div>
-    
+    </nav>
     <div class="selecto">
               <?php
                 require '../api/db_connect.php';
@@ -60,7 +60,6 @@
                   }
                 ?>
     </div>
-    </nav>
     <div id="displaydata"></div>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
