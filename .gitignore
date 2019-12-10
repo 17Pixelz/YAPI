@@ -1,8 +1,7 @@
 # ignoring the db_connect file because it will be created in the hosting server
-./api/db_connect.php
 
-./a.php
+api/db_connect.php
 
-./tests.php
+tests.php
 
-./install.php
+install.php
