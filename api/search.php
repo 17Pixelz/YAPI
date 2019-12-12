@@ -25,15 +25,6 @@
         // require the functions file
         require './functions.php';
 
-        // initialise the devlover key
-        //$dev_key = 'AIzaSyABv2OXTwE_ptpYZ-x71o77XpN0SCfRgWQ';
-
-
-        //////// comments
-        //////// https://www.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=10&moderationStatus=published&order=relevance&videoId=pwkNLGTI-Gg&key=AIzaSyABv2OXTwE_ptpYZ-x71o77XpN0SCfRgWQ
-
-
-
         // test the validity of data
         if (isset($_GET['q'], $_GET['ds'], $_GET['df']) && $_GET['q'] !== "" && $_GET['ds'] !== "" && $_GET['df'] !== "") {
             $q = $_GET['q'];

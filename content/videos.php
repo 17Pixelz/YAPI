@@ -59,7 +59,7 @@
                   }else{
                     echo "<h1 style='text-align:center;margin-top:250px;font-size:60px'>La base de donnees est vide</h1><br><h2 style='text-align:center;font-size:30px'>ajouter les donnes par ajouter un mot cle</h2>";
                   }
-                ?>
+              ?>
     </div>
     <div id="displaydata"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

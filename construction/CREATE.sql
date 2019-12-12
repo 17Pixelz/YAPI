@@ -56,4 +56,3 @@ CREATE TABLE contiennent(
 	,CONSTRAINT contiennent_motscles_FK FOREIGN KEY (mc_id) REFERENCES motscles(mc_id)
 	,CONSTRAINT contiennent_videos0_FK FOREIGN KEY (v_id) REFERENCES videos(v_id)
 );
-

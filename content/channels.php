@@ -46,7 +46,7 @@
                     echo "<td><a href=\"https://www.youtube.com/channel/".$row['ch_id']."\" target=\"_blank\" style=\"cursor:pointer;text-decoration:underline;color:grey\">" . $row['ch_id']  . "</a></td>";
                     echo "<td>" . $row['ch_name'] ."</td>";
                 echo "</tr>";
-            }
+        }
         } else {
             echo "<h1 style='text-align:center;margin-top:250px;font-size:60px'>La base de donnees est vide</h1><br><h2 style='text-align:center;font-size:30px'>ajouter les donnes par ajouter un mot cle</h2>";
 

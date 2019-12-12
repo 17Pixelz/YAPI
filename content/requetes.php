@@ -438,7 +438,7 @@
                         <?php
                             }else{
                                 echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
-                            }
+                                }
                         ?>
                     </div>    
                 </div>

@@ -48,7 +48,6 @@ function get_data($q,$ds,$df,$mc_id)
 $url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=". $q ."&key=".$GLOBALS['dk']."&publishedAfter=".$ds."&publishedBefore=".$df."&maxResults=". 3;
 $searchVideos = getDataForomJson($url);
 
-
 // separate the data recieved and insert it into the right tables
 $c = get_all($searchVideos,$mc_id);
 $GLOBALS['conn']->close();

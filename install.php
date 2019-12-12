@@ -57,7 +57,6 @@ if (\$conn->connect_error) {
         }
     }
         
-        
     ?> 
     <div class="container" style="margin-top:150px">
     <form method="POST"> 
