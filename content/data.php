@@ -105,20 +105,20 @@ function    r5($q)
 function r7($q)
 {
     $html ="";
-    $sql = 'select m.mc mc ,v1.v_titre titre ,ch.ch_name name
-            from motscles m,videos v1,contiennent c1,chaines ch , commentaires com1
-            where m.mc='.$q.'  and 
-            c1.mc_id=m.mc_id and 
-            v1.v_id=c1.v_id and 
-            ch.ch_id=com1.ch_id and 
-            v1.v_id=com1.v_id and 
-            com_j = (   select max(com_j) 
-                        from commentaires com2 , videos v2,videos v3  
-                        where v2.v_id=com2.v_id and 
-                        v2.v_j=v3.v_j and 
-                        v3.v_j = (  select max(v3.v_j) 
-                                    from videos v3,contiennent c2 
-                                    where v3.v_id=c2.v_id ))';
+    $sql = 'select m.mc mc ,v1.v_titre titre ,ch.ch_name nam
+    from motscles m,videos v1,contiennent c1,chaines ch , commentaires com1
+    where m.mc_id='.$q.' and 
+    c1.mc_id=m.mc_id and 
+    v1.v_id=c1.v_id and 
+    ch.ch_id=com1.ch_id and 
+    v1.v_id=com1.v_id and 
+    com_j = (   select max(com_j) 
+                from commentaires com2 , videos v2 ,videos v3  
+                where v2.v_id=com2.v_id and 
+                v2.v_j=v3.v_j and 
+                v2.v_j = (  select max(v3.v_j) 
+                            from videos v3,contiennent c2 
+                            where v3.v_id=c2.v_id  and m.mc_id=c2.mc_id))';
     $result = $GLOBALS['conn']->query($sql);
     if ($result->num_rows > 0) {
         $html="<table  class='table table-dark table-hover table-striped'>
@@ -135,7 +135,7 @@ function r7($q)
             $html .= "<tr>";
             $html .= "<td>" . $row['mc'] ."</td>";
             $html .= "<td>" . $row['titre'] ."</td>";
-            $html .= "<td>" . $row['name'] ."</td>";
+            $html .= "<td>" . $row['nam'] ."</td>";
             $html .= "</tr>";
         }
     }else {

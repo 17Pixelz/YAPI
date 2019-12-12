@@ -200,11 +200,11 @@
                     </div>
                     <div class="modal-body">
                     <?php
-                        $sql = "select m.mc mc,YEAR(v.pub_date) pub ,count(c.v_id) nbr 
+                        $sql = "select m.mc_id,m.mc mc,YEAR(v.pub_date) pub ,count(c.v_id) nbr 
                         from motscles m, videos v, contiennent c 
                         where   m.mc_id=c.mc_id and 
                                 c.v_id=v.v_id 
-                        group by m.mc,YEAR(v.pub_date);";
+                        group by m.mc_id,YEAR(m.rech_d);";
                         $result = $conn->query($sql);
                         if ($result->num_rows > 0) {
                     ?>
@@ -426,14 +426,15 @@
                             }
                         ?>  
                         <form method="get">
-                            <select name="empid" id="empid"  class="form-control" onchange="getData('r7' ,this.value, 'displaydata')">
+                            <select name="empid" id="empid"  class="form-control" onchange="getData('r7' ,this.value, 'displaydata1')">
                                 <?php
                                 echo $option;
                                 ?> 
                             </select>
-                            <div id="displaydata">
-                            </div>
+                            
                         </form>
+                        <div id="displaydata1">
+                            </div>
                         <?php
                             }else{
                                 echo "<h1 style='text-align:center;font-size:60px'> There's no data</h1>";
