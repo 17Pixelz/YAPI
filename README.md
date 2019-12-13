@@ -9,7 +9,7 @@ git clone https://github.com/17Pixelz/project.git
 ```
 
 ## open the site
-an interface will show up asking you for a username, password, and a database name; don't panic, you just need to fill them with your database username and your password of that username and the name that you'll give to your db.
+open the site and an interface will show up asking you for a username, password, and a database name; don't panic, you just need to fill them with your database username and your password of that username and the name that you'll give to your db.
 
 ## start filling and submitting
 now you're ready to go, just type a keyword and a date range and click "chercher" and let it roll over.
