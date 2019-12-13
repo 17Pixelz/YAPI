@@ -52,7 +52,7 @@ if (\$conn->connect_error) {
                 fwrite($b,$db);
                 fclose($b);
                 unlink(__FILE__);
-                header("Location: /Project/index.php");
+                header("Location: /project/index.php");
             }
         }
     }

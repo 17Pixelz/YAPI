@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -43,7 +43,7 @@
             <a class="nav-item nav-link" href="/project/content/videos.php">Videos</a>
             <a class="nav-item nav-link" href="/project/content/channels.php">Channels</a>
             <a class="nav-item nav-link" href="/project/content/comments.php">Comments</a>
-            <a class="nav-item nav-link active" href="/Project/content/requetes.php">Requetes</a>
+            <a class="nav-item nav-link active" href="/project/content/requetes.php">Requetes</a>
             </div>
         </div>
     </nav>
